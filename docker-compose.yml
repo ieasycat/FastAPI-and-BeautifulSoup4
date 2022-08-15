@@ -1,0 +1,38 @@
+version: "3.10"
+
+services:
+  app:
+    build: .
+    entrypoint: ./boot.sh
+    restart: on-failure
+    env_file:
+      - .env_docker
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.3-alpine
+    container_name: vacancies_manager_db
+    env_file:
+      - .env_docker
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+
+
+  celery:
+    build: .
+    container_name: vacancies_manager_celery
+    command: celery -A app.scripts worker --beat -s celerybeat-scedule --loglevel INFO
+    restart: on-failure
+    env_file:
+      - .env_docker
+    depends_on:
+      - db
+      - redis

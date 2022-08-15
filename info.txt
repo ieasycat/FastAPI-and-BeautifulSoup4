@@ -1,0 +1,33 @@
+# Миграции в базк данных
+pip install aerich
+
+# Инит
+aerich init -h
+
+# Создание конфига и миграции(cconfig.tortoise_config.AERICH_CONFIG путь до файла)
+aerich init -t config.tortoise_config.AERICH_CONFIG
+
+# Создание миграции
+aerich init-db
+
+# Ппри изменение в таблице (удаление добалвение столбцов)
+aerich migrate --name drop_column
+
+# Запись изменений в таблицу
+aerich upgrade
+
+# Создание Redis базы
+docker run -p 6379:6379 -d redis
+
+# Создание базы Postgres
+docker run --name vacancy-pg-13.3 -p 5432:5432 -e POSTGRES_USER=vacancy -e POSTGRES_PASSWORD=vacancypass -e POSTGRES_DB=vacancy -d postgres:13.3
+
+
+# Запуск Celery
+celery -A app.scripts worker --beat -s celerybeat-scedule --loglevel INFO
+
+# Покрытие тестами
+pytest --cov=.
+
+# Запуск приложения локально
+uvicorn app:app --reload

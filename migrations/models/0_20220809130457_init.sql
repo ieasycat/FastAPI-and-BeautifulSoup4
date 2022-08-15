@@ -1,0 +1,24 @@
+-- upgrade --
+CREATE TABLE IF NOT EXISTS "source" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "name" VARCHAR(50)
+);
+CREATE TABLE IF NOT EXISTS "vacancy" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "technology" VARCHAR(50),
+    "date" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "description" VARCHAR(500),
+    "url" VARCHAR(150),
+    "source_id" INT NOT NULL REFERENCES "source" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "user" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "email" VARCHAR(50) NOT NULL UNIQUE,
+    "password_hash" VARCHAR(128) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "aerich" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "version" VARCHAR(255) NOT NULL,
+    "app" VARCHAR(100) NOT NULL,
+    "content" JSONB NOT NULL
+);
